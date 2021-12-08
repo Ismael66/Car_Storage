@@ -5,6 +5,7 @@ namespace Car_Storage
 {
     public class Console_Carros
     {
+        static string path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + @$"\Carros.txt";
         public static void Menu()
         {
             try
@@ -14,20 +15,17 @@ namespace Car_Storage
                 Console.WriteLine("Menu Principal");
                 criaLinha();
                 Console.WriteLine("[1] Inserir um novo veículo\n" +
-                "[2] Listar os veículos cadastrados\n" +
-                "[3] Listar os veículos filtrando-se por ano de fabricação\n" +
-                "[4] Listar os veículos com o ano de fabricação\n" +
-                "[5] Listar os veículos filtrando-se pelo modelo");
+                "[2] Listar os veículos cadastrados");
                 criaLinha();
                 Console.Write("Digite a opção desejada: ");
-                Escolha(Console.ReadLine());
+                escolha(Console.ReadLine());
             }
             catch (System.Exception ex)
             {
                 throw new Exception(ex.Message);
             }
         }
-        static void Escolha(string? escolha)
+        static void escolha(string? escolha)
         {
             try
             {
@@ -39,16 +37,7 @@ namespace Car_Storage
                         inserirNovoVeiculo();
                         break;
                     case "2":
-                        Console.WriteLine("2");
-                        break;
-                    case "3":
-                        Console.WriteLine("3");
-                        break;
-                    case "4":
-                        Console.WriteLine("4");
-                        break;
-                    case "5":
-                        Console.WriteLine("5");
+                        listarVeiculos();
                         break;
                     default:
                         Console.WriteLine("default");
@@ -64,22 +53,87 @@ namespace Car_Storage
         #region Funções Switch
         static void inserirNovoVeiculo()
         {
+            if (File.Exists(path))
+            {
+                Console.Clear();
+                var arquivo = new StreamWriter(path);
+                StringBuilder carro = new StringBuilder();
+                criaLinha();
+                carro.Append("==============================\n");
+                Console.WriteLine("Digite a marca do carro");
+                carro.Append($"Marca: {Console.ReadLine()}\n");
+                Console.WriteLine("Digite o modelo do carro");
+                carro.Append($"Modelo: {Console.ReadLine()}\n");
+                Console.WriteLine("Digite o ano de fabricação do carro");
+                carro.Append($"Ano: {Console.ReadLine()}\n");
+                Console.WriteLine("Digite a placa do carro");
+                carro.Append($"Placa: {Console.ReadLine()}");
+                Console.WriteLine(carro);
+                arquivo.Write(carro);
+                arquivo.Close();
+                criaLinha();
+            }
+            else
+            {
+                Console.WriteLine("O arquivo com a lista de carros não existe.\nDeseja criar um novo? <s/n>");
+                if (Console.ReadLine() == "s")
+                {
+                    criaLinha();
+                    var arquivo = new StreamWriter(path, true);
+                    arquivo.Close();
+                    Console.WriteLine("Arquivo criado com sucesso.\nPressione qualquer tecla para continuar.");
+                    Console.ReadKey();
+                    Menu();
+                }
+                else
+                {
+                    Menu();
+                }
+            }
+        }
+        static void listarVeiculos()
+        {
             Console.Clear();
-            StringBuilder carro = new StringBuilder();
             criaLinha();
-            carro.Append("==============================\n");
-            Console.WriteLine("Digite a marca do carro");
-            carro.Append($"Marca: {Console.ReadLine()}\n");
-            Console.WriteLine("Digite o modelo do carro");
-            carro.Append($"Modelo: {Console.ReadLine()}\n");
-            Console.WriteLine("Digite o ano de fabricação do carro");
-            carro.Append($"Ano: {Console.ReadLine()}\n");
-            Console.WriteLine("Digite a placa do carro");
-            carro.Append($"Placa: {Console.ReadLine()}");
-            Console.WriteLine(carro);
+            Console.WriteLine("Como deseja listar?");
             criaLinha();
+            Console.WriteLine("[1] Listar os veículos filtrando pela ordem de cadastro\n" +
+                "[2] Listar os veículos filtrando pelo ano de fabricação\n" +
+                "[3] Listar os veículos filtrando pelo modelo");
+            criaLinha();
+            Console.Write("Digite a opção desejada: ");
+            escolhaListar(Console.ReadLine());
         }
         #endregion
+        static void escolhaListar(string escolha)
+        {
+            
+            try
+            {
+                Console.Clear();
+                criaLinha();
+                switch (escolha)
+                {
+                    case "1":
+                        Console.WriteLine("Lista ordem cadastro");
+                        break;
+                    case "2":
+                        Console.WriteLine("Lista ordem ano");
+                        break;
+                    case "3":
+                        Console.WriteLine("Lista ordem modelo");
+                        break;
+                    default:
+                        Console.WriteLine("default");
+                        Menu();
+                        break;
+                }
+            }
+            catch (System.Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
         static void criaLinha(int repeticoes = 30, char simbolo = '=')
         {
             var store = new StringBuilder(repeticoes);
