@@ -13,8 +13,8 @@ namespace Car_Storage
                 criaLinha();
                 Console.WriteLine("Menu Principal");
                 criaLinha();
-                Console.WriteLine("[1] Listar os veículos cadastrados\n" +
-                "[2] Inserir um novo veículo\n" +
+                Console.WriteLine("[1] Inserir um novo veículo\n" +
+                "[2] Listar os veículos cadastrados\n" +
                 "[3] Listar os veículos filtrando-se por ano de fabricação\n" +
                 "[4] Listar os veículos com o ano de fabricação\n" +
                 "[5] Listar os veículos filtrando-se pelo modelo");
@@ -36,7 +36,7 @@ namespace Car_Storage
                 switch (escolha)
                 {
                     case "1":
-                        Console.WriteLine("1");
+                        inserirNovoVeiculo();
                         break;
                     case "2":
                         Console.WriteLine("2");
@@ -61,7 +61,26 @@ namespace Car_Storage
                 throw new Exception(ex.Message);
             }
         }
-        static void criaLinha(int repeticoes = 30, char simbolo = '-')
+        #region Funções Switch
+        static void inserirNovoVeiculo()
+        {
+            Console.Clear();
+            StringBuilder carro = new StringBuilder();
+            criaLinha();
+            carro.Append("==============================\n");
+            Console.WriteLine("Digite a marca do carro");
+            carro.Append($"Marca: {Console.ReadLine()}\n");
+            Console.WriteLine("Digite o modelo do carro");
+            carro.Append($"Modelo: {Console.ReadLine()}\n");
+            Console.WriteLine("Digite o ano de fabricação do carro");
+            carro.Append($"Ano: {Console.ReadLine()}\n");
+            Console.WriteLine("Digite a placa do carro");
+            carro.Append($"Placa: {Console.ReadLine()}");
+            Console.WriteLine(carro);
+            criaLinha();
+        }
+        #endregion
+        static void criaLinha(int repeticoes = 30, char simbolo = '=')
         {
             var store = new StringBuilder(repeticoes);
             int index = 0;
