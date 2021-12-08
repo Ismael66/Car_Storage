@@ -73,41 +73,29 @@ namespace Car_Storage
                 arquivo.Close();
                 criaLinha();
             }
-            else
-            {
-                Console.WriteLine("O arquivo com a lista de carros não existe.\nDeseja criar um novo? <s/n>");
-                if (Console.ReadLine() == "s")
-                {
-                    criaLinha();
-                    var arquivo = new StreamWriter(path, true);
-                    arquivo.Close();
-                    Console.WriteLine("Arquivo criado com sucesso.\nPressione qualquer tecla para continuar.");
-                    Console.ReadKey();
-                    Menu();
-                }
-                else
-                {
-                    Menu();
-                }
-            }
+            else criaArquivo();
         }
         static void listarVeiculos()
         {
-            Console.Clear();
-            criaLinha();
-            Console.WriteLine("Como deseja listar?");
-            criaLinha();
-            Console.WriteLine("[1] Listar os veículos filtrando pela ordem de cadastro\n" +
-                "[2] Listar os veículos filtrando pelo ano de fabricação\n" +
-                "[3] Listar os veículos filtrando pelo modelo");
-            criaLinha();
-            Console.Write("Digite a opção desejada: ");
-            escolhaListar(Console.ReadLine());
+            if (File.Exists(path))
+            {
+                Console.Clear();
+                criaLinha();
+                Console.WriteLine("Como deseja listar?");
+                criaLinha();
+                Console.WriteLine("[1] Listar os veículos filtrando pela ordem de cadastro\n" +
+                    "[2] Listar os veículos filtrando pelo ano de fabricação\n" +
+                    "[3] Listar os veículos filtrando pelo modelo");
+                criaLinha();
+                Console.Write("Digite a opção desejada: ");
+                escolhaListar(Console.ReadLine());
+            }
+            else criaArquivo();
         }
         #endregion
         static void escolhaListar(string escolha)
         {
-            
+
             try
             {
                 Console.Clear();
@@ -115,7 +103,7 @@ namespace Car_Storage
                 switch (escolha)
                 {
                     case "1":
-                        Console.WriteLine("Lista ordem cadastro");
+                        listaOrdemCadastro();
                         break;
                     case "2":
                         Console.WriteLine("Lista ordem ano");
@@ -134,6 +122,13 @@ namespace Car_Storage
                 throw new Exception(ex.Message);
             }
         }
+        #region Funções Switch Lista
+        static void listaOrdemCadastro()
+        {
+
+        }
+        #endregion
+        #region Funções Normais
         static void criaLinha(int repeticoes = 30, char simbolo = '=')
         {
             var store = new StringBuilder(repeticoes);
@@ -145,5 +140,21 @@ namespace Car_Storage
             }
             Console.WriteLine(store.ToString());
         }
+        static void criaArquivo()
+        {
+            Console.WriteLine("O arquivo com a lista de carros não existe.\nDeseja criar um novo? <s/n>");
+            if (Console.ReadLine() == "s")
+            {
+                criaLinha();
+                var arquivo = new StreamWriter(path, true);
+                arquivo.Close();
+                Console.WriteLine("Arquivo criado com sucesso.\nPressione qualquer tecla para continuar.");
+                Console.ReadKey();
+                Menu();
+            }
+            else Menu();
+        }
+        #endregion
+
     }
 }
