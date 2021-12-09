@@ -56,7 +56,7 @@ namespace Car_Storage
             if (File.Exists(path))
             {
                 Console.Clear();
-                var arquivo = new StreamWriter(path);
+                var arquivo = new StreamWriter(path, append: true);
                 StringBuilder carro = new StringBuilder();
                 criaLinha();
                 carro.Append("==============================\n");
@@ -69,9 +69,10 @@ namespace Car_Storage
                 Console.WriteLine("Digite a placa do carro");
                 carro.Append($"Placa: {Console.ReadLine()}");
                 Console.WriteLine(carro);
-                arquivo.Write(carro);
+                arquivo.WriteLine(carro);
                 arquivo.Close();
-                criaLinha();
+                retornarMenu("Informações guardadas com sucesso.", true);
+                Menu();
             }
             else criaArquivo();
         }
@@ -125,10 +126,31 @@ namespace Car_Storage
         #region Funções Switch Lista
         static void listaOrdemCadastro()
         {
-
+            Console.Clear();
+            string arquivo = System.IO.File.ReadAllText(path);
+            Console.Write(arquivo);
+            retornarMenu("Arquivo aberto com seucesso.", true);
+            Menu();
         }
         #endregion
         #region Funções Normais
+        public static bool retornarMenu(string msg = "", bool read = false)
+        {
+            criaLinha();
+            Console.WriteLine(msg + (read ? "\nPressione qualquer tecla para continuar." : string.Empty));
+            if (read)
+            {
+                Console.ReadKey(); // sem enter
+                return false;
+            }
+            string? resposta = Console.ReadLine();
+            Console.Clear();
+            if (!string.IsNullOrEmpty(resposta) &&
+            resposta.ToLower() == "s")
+                return true;
+            else
+                return false;
+        }
         static void criaLinha(int repeticoes = 30, char simbolo = '=')
         {
             var store = new StringBuilder(repeticoes);
