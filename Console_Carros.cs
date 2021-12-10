@@ -1,10 +1,12 @@
 using System;
 using System.Text;
+using Newtonsoft.Json;
 
 namespace Car_Storage
 {
     public class Console_Carros
     {
+        static ArquivoFormato conteudo = new ArquivoFormato();
         static string path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + @$"\Carros.txt";
         public static void Menu()
         {
@@ -57,19 +59,23 @@ namespace Car_Storage
             {
                 Console.Clear();
                 var arquivo = new StreamWriter(path, append: true);
-                StringBuilder carro = new StringBuilder();
                 criaLinha();
-                carro.Append("==============================\n");
                 Console.WriteLine("Digite a marca do carro");
-                carro.Append($"Marca: {Console.ReadLine()}\n");
+                string? marca = Console.ReadLine();
                 Console.WriteLine("Digite o modelo do carro");
-                carro.Append($"Modelo: {Console.ReadLine()}\n");
+                string modelo = Console.ReadLine();
                 Console.WriteLine("Digite o ano de fabricação do carro");
-                carro.Append($"Ano: {Console.ReadLine()}\n");
+                int ano = int.Parse(Console.ReadLine());
                 Console.WriteLine("Digite a placa do carro");
-                carro.Append($"Placa: {Console.ReadLine()}\n\r");
-                Console.WriteLine(carro);
-                arquivo.WriteLine(carro);
+                string placa = Console.ReadLine();
+                string teste = "{" + $"marca : {marca}, modelo : {modelo}, ano : {ano}, placa : {placa}" + "}";
+                Console.WriteLine(teste);
+                conteudo = JsonConvert.DeserializeObject<ArquivoFormato>(teste);
+                Console.WriteLine(conteudo.marca);
+                Console.WriteLine(conteudo.modelo);
+                Console.WriteLine(conteudo.ano);
+                Console.WriteLine(conteudo.placa);
+                arquivo.WriteLine(teste);
                 arquivo.Close();
                 retornarMenu("Informações guardadas com sucesso.", true);
                 Menu();
@@ -181,21 +187,13 @@ namespace Car_Storage
         {
             string arquivo = System.IO.File.ReadAllText(path);
             Console.WriteLine("Entrou");
-            string[] blocos = arquivo.Split("\n\r");
+            string[] blocos = arquivo.Split("}");
+            Console.WriteLine(blocos);
+            Console.WriteLine(blocos[0]);
+            conteudo = JsonConvert.DeserializeObject<ArquivoFormato>(blocos[0]);
             Console.WriteLine("Entrou");
-            string[] linhas = new string[]{};
-            Console.WriteLine("Entrou");
-            foreach (var value in blocos)
-            {
-                Console.WriteLine("Entrou");
-                var linhasBloco = new string[]{};
-                Console.WriteLine("Entrou");
-                linhasBloco[int.Parse(value)] = (blocos[int.Parse(value)].Split("\n")).ToString();
-                Console.WriteLine("Entrou 1");
-                linhas[int.Parse(value)] = linhasBloco[int.Parse(value)];
-                Console.WriteLine("Entrou 2");
-            }
-            Console.WriteLine(linhas);
+            Console.WriteLine(conteudo.marca);
+            Console.WriteLine(blocos[1]);
         }
         #endregion
     }
