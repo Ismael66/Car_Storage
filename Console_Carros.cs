@@ -67,7 +67,7 @@ namespace Car_Storage
                 Console.WriteLine("Digite o ano de fabricação do carro");
                 carro.Append($"Ano: {Console.ReadLine()}\n");
                 Console.WriteLine("Digite a placa do carro");
-                carro.Append($"Placa: {Console.ReadLine()}");
+                carro.Append($"Placa: {Console.ReadLine()}\n\r");
                 Console.WriteLine(carro);
                 arquivo.WriteLine(carro);
                 arquivo.Close();
@@ -96,7 +96,6 @@ namespace Car_Storage
         #endregion
         static void escolhaListar(string escolha)
         {
-
             try
             {
                 Console.Clear();
@@ -107,7 +106,7 @@ namespace Car_Storage
                         listaOrdemCadastro();
                         break;
                     case "2":
-                        Console.WriteLine("Lista ordem ano");
+                        separaArquivo();
                         break;
                     case "3":
                         Console.WriteLine("Lista ordem modelo");
@@ -133,14 +132,14 @@ namespace Car_Storage
             Menu();
         }
         #endregion
-        #region Funções Normais
+        #region Funções Comuns
         public static bool retornarMenu(string msg = "", bool read = false)
         {
             criaLinha();
             Console.WriteLine(msg + (read ? "\nPressione qualquer tecla para continuar." : string.Empty));
             if (read)
             {
-                Console.ReadKey(); // sem enter
+                Console.ReadKey();
                 return false;
             }
             string? resposta = Console.ReadLine();
@@ -177,6 +176,28 @@ namespace Car_Storage
             else Menu();
         }
         #endregion
-
+        #region Funções Arquivo
+        static void separaArquivo()
+        {
+            string arquivo = System.IO.File.ReadAllText(path);
+            Console.WriteLine("Entrou");
+            string[] blocos = arquivo.Split("\n\r");
+            Console.WriteLine("Entrou");
+            string[] linhas = new string[]{};
+            Console.WriteLine("Entrou");
+            foreach (var value in blocos)
+            {
+                Console.WriteLine("Entrou");
+                var linhasBloco = new string[]{};
+                Console.WriteLine("Entrou");
+                linhasBloco[int.Parse(value)] = (blocos[int.Parse(value)].Split("\n")).ToString();
+                Console.WriteLine("Entrou 1");
+                linhas[int.Parse(value)] = linhasBloco[int.Parse(value)];
+                Console.WriteLine("Entrou 2");
+            }
+            Console.WriteLine(linhas);
+        }
+        #endregion
     }
+
 }
