@@ -93,21 +93,29 @@ namespace Car_Storage
         {
             if (File.Exists(path))
             {
-                // Console.Clear();
-                criaLinha();
-                Console.WriteLine("Como deseja listar?");
-                criaLinha();
-                Console.WriteLine("[1] Listar os veículos filtrando pela ordem de cadastro\n" +
-                    "[2] Listar os veículos filtrando pelo ano de fabricação\n" +
-                    "[3] Listar os veículos filtrando pelo modelo");
-                criaLinha();
-                Console.Write("Digite a opção desejada: ");
-                escolhaListar(Console.ReadLine());
+                if (System.IO.File.ReadAllText(path) != "")
+                {
+                    // Console.Clear();
+                    criaLinha();
+                    Console.WriteLine("Como deseja listar?");
+                    criaLinha();
+                    Console.WriteLine("[1] Listar os veículos filtrando pela ordem de cadastro\n" +
+                        "[2] Listar os veículos filtrando pelo ano de fabricação\n" +
+                        "[3] Listar os veículos filtrando pelo modelo");
+                    criaLinha();
+                    Console.Write("Digite a opção desejada: ");
+                    escolhaListarVeiculos(Console.ReadLine());
+                }
+                else
+                {
+                    retornarMenu("O arquivo está vazio, insira dados.", true);
+                    Menu();
+                }
             }
             else criaArquivo();
         }
         #endregion
-        static void escolhaListar(string? escolha)
+        static void escolhaListarVeiculos(string? escolha)
         {
             try
             {
@@ -122,9 +130,7 @@ namespace Car_Storage
                         listaOrdemAno();
                         break;
                     case "3":
-                        // separaArquivoEmBlocos();
                         listaOrdemModelo();
-                        Console.WriteLine("Lista ordem modelo");
                         break;
                     default:
                         Console.WriteLine("default");
@@ -141,8 +147,33 @@ namespace Car_Storage
         static void listaOrdemCadastro()
         {
             // Console.Clear();
-            string arquivo = System.IO.File.ReadAllText(path);
-            Console.Write(arquivo);
+            insereValorListaCarros();
+            foreach (Carro elemento in carrosLista)
+            {
+                Console.WriteLine($"=> Marca:{elemento.marca}; Modelo:{elemento.modelo}; Ano:{elemento.ano}; Placa:{elemento.placa}.");
+            }
+            retornarMenu("Arquivo aberto com sucesso.", true);
+            Menu();
+        }
+        static void listaOrdemAno()
+        {
+            insereValorListaCarros();
+            IEnumerable<Carro> sequencia = carrosLista.OrderBy(elemento => elemento.ano);
+            foreach (Carro elemento in sequencia)
+            {
+                Console.WriteLine($"=> Marca:{elemento.marca}; Modelo:{elemento.modelo}; Ano:{elemento.ano}; Placa:{elemento.placa}.");
+            }
+            retornarMenu("Arquivo aberto com sucesso.", true);
+            Menu();
+        }
+        static void listaOrdemModelo()
+        {
+            insereValorListaCarros();
+            IEnumerable<Carro> sequencia = carrosLista.OrderBy(elemento => elemento.modelo);
+            foreach (Carro elemento in sequencia)
+            {
+                Console.WriteLine($"=> Marca:{elemento.marca}; Modelo:{elemento.modelo}; Ano:{elemento.ano}; Placa:{elemento.placa}.");
+            }
             retornarMenu("Arquivo aberto com sucesso.", true);
             Menu();
         }
@@ -157,6 +188,7 @@ namespace Car_Storage
                 Console.ReadKey();
                 return false;
             }
+            carrosLista.Clear();
             string? resposta = Console.ReadLine();
             // Console.Clear();
             if (!string.IsNullOrEmpty(resposta) &&
@@ -252,25 +284,6 @@ namespace Car_Storage
                 carrosLista.Add(JsonConvert.DeserializeObject<Carro>(arquivo));
             }
         }
-        static void listaOrdemAno()
-        {
-            insereValorListaCarros();
-            IEnumerable<Carro> sequencia = carrosLista.OrderBy(elemento => elemento.ano);
-            foreach (Carro elemento in sequencia)
-            {
-                Console.WriteLine($" Marca:{elemento.marca}; Modelo:{elemento.modelo}; Ano:{elemento.ano}; Placa:{elemento.placa}.");
-            }
-
-        }
-        static void listaOrdemModelo()
-        {
-            insereValorListaCarros();
-            IEnumerable<Carro> sequencia = carrosLista.OrderBy(elemento => elemento.modelo);
-            foreach (Carro elemento in sequencia)
-            {
-                Console.WriteLine($" Marca:{elemento.marca}; Modelo:{elemento.modelo}; Ano:{elemento.ano}; Placa:{elemento.placa}.");
-            }
-            #endregion
-        }
+        #endregion
     }
 }
