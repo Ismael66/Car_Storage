@@ -29,6 +29,7 @@ namespace Car_Storage
                 throw new Exception(ex.Message);
             }
         }
+        #region Funções Switch Principal
         static void escolha(string? escolha)
         {
             try
@@ -54,7 +55,6 @@ namespace Car_Storage
                 throw new Exception(ex.Message);
             }
         }
-        #region Funções Switch
         static void inserirNovoVeiculo()
         {
             try
@@ -115,6 +115,7 @@ namespace Car_Storage
             else criaArquivo();
         }
         #endregion
+        #region Funções Switch Lista
         static void escolhaListarVeiculos(string? escolha)
         {
             try
@@ -143,7 +144,6 @@ namespace Car_Storage
                 throw new Exception(ex.Message);
             }
         }
-        #region Funções Switch Lista
         static void listaOrdemCadastro()
         {
             // Console.Clear();
@@ -186,9 +186,9 @@ namespace Car_Storage
             if (read)
             {
                 Console.ReadKey();
+                carrosLista.Clear();
                 return false;
             }
-            carrosLista.Clear();
             string? resposta = Console.ReadLine();
             // Console.Clear();
             if (!string.IsNullOrEmpty(resposta) &&
@@ -224,37 +224,6 @@ namespace Car_Storage
         }
         #endregion
         #region Funções Arquivo
-        static void separaArquivoEmBlocos()
-        {
-            string arquivo = System.IO.File.ReadAllText(path);
-            Console.WriteLine("Entrou");
-            if (arquivo.Contains(";"))
-            {
-                string[] blocos = arquivo.Split(";");
-                foreach (var item in blocos)
-                {
-                    if (!string.IsNullOrEmpty(item))
-                    {
-                        try
-                        {
-                            var itemConvertido = JsonConvert.DeserializeObject<Carro>(item);
-                            if (itemConvertido != null)
-                            {
-                                Console.WriteLine(itemConvertido.ano);
-                                Console.WriteLine(itemConvertido.modelo);
-                                Console.WriteLine(itemConvertido.marca);
-                                Console.WriteLine(itemConvertido.placa);
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine($"Função separaArquivoEmBlocos, erro :{ex.Message}");
-                            throw new Exception(ex.Message);
-                        }
-                    }
-                }
-            }
-        }
         static void insereValorListaCarros()
         {
             string arquivo = System.IO.File.ReadAllText(path);
@@ -273,7 +242,7 @@ namespace Car_Storage
                         }
                         catch (Exception ex)
                         {
-                            Console.WriteLine($"Função separaArquivoEmBlocos, erro :{ex.Message}");
+                            Console.WriteLine($"Função insereValorListaCarros, erro :{ex.Message}");
                             throw new Exception(ex.Message);
                         }
                     }
