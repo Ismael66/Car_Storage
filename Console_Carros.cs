@@ -1,18 +1,20 @@
 using System;
 using System.Text;
 using Newtonsoft.Json;
+using System.Text.RegularExpressions;
 
 namespace Car_Storage
 {
     public class Console_Carros
     {
-        static ArquivoFormato conteudo = new ArquivoFormato();
+        static List<Carro> carrosLista = new List<Carro>();
+        static Carro veiculo = new Carro();
         static string path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + @$"\Carros.txt";
         public static void Menu()
         {
             try
             {
-                Console.Clear();
+                // Console.Clear();
                 criaLinha();
                 Console.WriteLine("Menu Principal");
                 criaLinha();
@@ -22,7 +24,7 @@ namespace Car_Storage
                 Console.Write("Digite a opção desejada: ");
                 escolha(Console.ReadLine());
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
@@ -31,7 +33,7 @@ namespace Car_Storage
         {
             try
             {
-                Console.Clear();
+                // Console.Clear();
                 criaLinha();
                 switch (escolha)
                 {
@@ -47,7 +49,7 @@ namespace Car_Storage
                         break;
                 }
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
@@ -55,38 +57,43 @@ namespace Car_Storage
         #region Funções Switch
         static void inserirNovoVeiculo()
         {
-            if (File.Exists(path))
+            try
             {
-                Console.Clear();
-                var arquivo = new StreamWriter(path, append: true);
-                criaLinha();
-                Console.WriteLine("Digite a marca do carro");
-                string? marca = Console.ReadLine();
-                Console.WriteLine("Digite o modelo do carro");
-                string modelo = Console.ReadLine();
-                Console.WriteLine("Digite o ano de fabricação do carro");
-                int ano = int.Parse(Console.ReadLine());
-                Console.WriteLine("Digite a placa do carro");
-                string placa = Console.ReadLine();
-                string teste = "{" + $"marca : {marca}, modelo : {modelo}, ano : {ano}, placa : {placa}" + "}";
-                Console.WriteLine(teste);
-                conteudo = JsonConvert.DeserializeObject<ArquivoFormato>(teste);
-                Console.WriteLine(conteudo.marca);
-                Console.WriteLine(conteudo.modelo);
-                Console.WriteLine(conteudo.ano);
-                Console.WriteLine(conteudo.placa);
-                arquivo.WriteLine(teste);
-                arquivo.Close();
-                retornarMenu("Informações guardadas com sucesso.", true);
-                Menu();
+                if (File.Exists(path))
+                {
+                    // Console.Clear();
+                    var arquivo = new StreamWriter(path, append: true);
+                    criaLinha();
+                    Console.WriteLine("Digite a marca do carro");
+                    veiculo.marca = Console.ReadLine();
+                    Console.WriteLine("Digite o modelo do carro");
+                    veiculo.modelo = Console.ReadLine();
+                    Console.WriteLine("Digite o ano de fabricação do carro");
+                    veiculo.ano = int.Parse(Console.ReadLine());
+                    Console.WriteLine("Digite a placa do carro");
+                    veiculo.placa = Console.ReadLine();
+                    Console.WriteLine(veiculo.marca);
+                    Console.WriteLine(veiculo.modelo);
+                    Console.WriteLine(veiculo.ano);
+                    Console.WriteLine(veiculo.placa);
+                    arquivo.WriteLine(JsonConvert.SerializeObject(veiculo) + ";");
+                    arquivo.Close();
+                    retornarMenu("Informações guardadas com sucesso.", true);
+                    Menu();
+                }
+                else criaArquivo();
             }
-            else criaArquivo();
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Função inserirNovoVeiculo, erro :{ex.Message}");
+                throw new Exception(ex.Message);
+            }
         }
         static void listarVeiculos()
         {
             if (File.Exists(path))
             {
-                Console.Clear();
+                // Console.Clear();
                 criaLinha();
                 Console.WriteLine("Como deseja listar?");
                 criaLinha();
@@ -100,11 +107,11 @@ namespace Car_Storage
             else criaArquivo();
         }
         #endregion
-        static void escolhaListar(string escolha)
+        static void escolhaListar(string? escolha)
         {
             try
             {
-                Console.Clear();
+                // Console.Clear();
                 criaLinha();
                 switch (escolha)
                 {
@@ -112,9 +119,10 @@ namespace Car_Storage
                         listaOrdemCadastro();
                         break;
                     case "2":
-                        separaArquivo();
+                        listaOrdemAno();
                         break;
                     case "3":
+                        separaArquivo();
                         Console.WriteLine("Lista ordem modelo");
                         break;
                     default:
@@ -123,7 +131,7 @@ namespace Car_Storage
                         break;
                 }
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
@@ -131,10 +139,10 @@ namespace Car_Storage
         #region Funções Switch Lista
         static void listaOrdemCadastro()
         {
-            Console.Clear();
+            // Console.Clear();
             string arquivo = System.IO.File.ReadAllText(path);
             Console.Write(arquivo);
-            retornarMenu("Arquivo aberto com seucesso.", true);
+            retornarMenu("Arquivo aberto com sucesso.", true);
             Menu();
         }
         #endregion
@@ -149,7 +157,7 @@ namespace Car_Storage
                 return false;
             }
             string? resposta = Console.ReadLine();
-            Console.Clear();
+            // Console.Clear();
             if (!string.IsNullOrEmpty(resposta) &&
             resposta.ToLower() == "s")
                 return true;
@@ -187,15 +195,63 @@ namespace Car_Storage
         {
             string arquivo = System.IO.File.ReadAllText(path);
             Console.WriteLine("Entrou");
-            string[] blocos = arquivo.Split("}");
-            Console.WriteLine(blocos);
-            Console.WriteLine(blocos[0]);
-            conteudo = JsonConvert.DeserializeObject<ArquivoFormato>(blocos[0]);
-            Console.WriteLine("Entrou");
-            Console.WriteLine(conteudo.marca);
-            Console.WriteLine(blocos[1]);
+            if (arquivo.Contains(";"))
+            {
+                string[] blocos = arquivo.Split(";");
+                foreach (var item in blocos)
+                {
+                    if (!string.IsNullOrEmpty(item))
+                    {
+                        try
+                        {
+                            var itemConvertido = JsonConvert.DeserializeObject<Carro>(item);
+                            if (itemConvertido != null)
+                            {
+                                Console.WriteLine(itemConvertido.ano);
+                                Console.WriteLine(itemConvertido.modelo);
+                                Console.WriteLine(itemConvertido.marca);
+                                Console.WriteLine(itemConvertido.placa);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"Função separaArquivo, erro :{ex.Message}");
+                            throw new Exception(ex.Message);
+                        }
+                    }
+                }
+            }
         }
-        #endregion
+        static void listaOrdemAno()
+        {
+            string arquivo = System.IO.File.ReadAllText(path);
+            if (arquivo.Contains(";"))
+            {
+                string[] blocos = arquivo.Split(";");
+                for (int i = 0; i < blocos.Length; i++)
+                {
+                    if (!string.IsNullOrEmpty(blocos[i]))
+                    {
+                        try
+                        {
+                            var itemConvertido = JsonConvert.DeserializeObject<Carro>(blocos[i]);
+                            if (itemConvertido != null)
+                                carrosLista.Add(itemConvertido);
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"Função separaArquivo, erro :{ex.Message}");
+                            throw new Exception(ex.Message);
+                        }
+                    }
+                }
+                IEnumerable<Carro> sequencia = carrosLista.OrderBy(elemento => elemento.ano);
+                foreach (Carro elemento in sequencia)
+                {
+                    Console.WriteLine($" Marca:{elemento.marca}; Modelo:{elemento.modelo}; Ano:{elemento.ano}; Placa:{elemento.placa}.");
+                }
+            }
+            #endregion
+        }
     }
-
 }
