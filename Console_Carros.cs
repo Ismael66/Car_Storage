@@ -122,7 +122,8 @@ namespace Car_Storage
                         listaOrdemAno();
                         break;
                     case "3":
-                        separaArquivo();
+                        // separaArquivoEmBlocos();
+                        listaOrdemModelo();
                         Console.WriteLine("Lista ordem modelo");
                         break;
                     default:
@@ -191,7 +192,7 @@ namespace Car_Storage
         }
         #endregion
         #region Funções Arquivo
-        static void separaArquivo()
+        static void separaArquivoEmBlocos()
         {
             string arquivo = System.IO.File.ReadAllText(path);
             Console.WriteLine("Entrou");
@@ -215,14 +216,14 @@ namespace Car_Storage
                         }
                         catch (Exception ex)
                         {
-                            Console.WriteLine($"Função separaArquivo, erro :{ex.Message}");
+                            Console.WriteLine($"Função separaArquivoEmBlocos, erro :{ex.Message}");
                             throw new Exception(ex.Message);
                         }
                     }
                 }
             }
         }
-        static void listaOrdemAno()
+        static void insereValorListaCarros()
         {
             string arquivo = System.IO.File.ReadAllText(path);
             if (arquivo.Contains(";"))
@@ -240,16 +241,34 @@ namespace Car_Storage
                         }
                         catch (Exception ex)
                         {
-                            Console.WriteLine($"Função separaArquivo, erro :{ex.Message}");
+                            Console.WriteLine($"Função separaArquivoEmBlocos, erro :{ex.Message}");
                             throw new Exception(ex.Message);
                         }
                     }
                 }
-                IEnumerable<Carro> sequencia = carrosLista.OrderBy(elemento => elemento.ano);
-                foreach (Carro elemento in sequencia)
-                {
-                    Console.WriteLine($" Marca:{elemento.marca}; Modelo:{elemento.modelo}; Ano:{elemento.ano}; Placa:{elemento.placa}.");
-                }
+            }
+            else
+            {
+                carrosLista.Add(JsonConvert.DeserializeObject<Carro>(arquivo));
+            }
+        }
+        static void listaOrdemAno()
+        {
+            insereValorListaCarros();
+            IEnumerable<Carro> sequencia = carrosLista.OrderBy(elemento => elemento.ano);
+            foreach (Carro elemento in sequencia)
+            {
+                Console.WriteLine($" Marca:{elemento.marca}; Modelo:{elemento.modelo}; Ano:{elemento.ano}; Placa:{elemento.placa}.");
+            }
+
+        }
+        static void listaOrdemModelo()
+        {
+            insereValorListaCarros();
+            IEnumerable<Carro> sequencia = carrosLista.OrderBy(elemento => elemento.modelo);
+            foreach (Carro elemento in sequencia)
+            {
+                Console.WriteLine($" Marca:{elemento.marca}; Modelo:{elemento.modelo}; Ano:{elemento.ano}; Placa:{elemento.placa}.");
             }
             #endregion
         }
