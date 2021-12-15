@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 using Newtonsoft.Json;
 
 namespace Car_Storage
@@ -40,8 +41,10 @@ namespace Car_Storage
                     case "2":
                         listarVeiculos();
                         break;
+                    case "testeMassa":
+                        inserirMassaDados();
+                        break;
                     default:
-                        Console.WriteLine("default");
                         Menu();
                         break;
                 }
@@ -50,6 +53,23 @@ namespace Car_Storage
             {
                 throw new Exception(ex.Message);
             }
+        }
+        static void inserirMassaDados()
+        {
+            Console.WriteLine("Gravando...");
+            var arquivo = new StreamWriter(path, append: true);
+            for (int i = 0; i < 500; i++)
+            {
+                var veiculo = new Carro()
+                {
+                    marca = $"marca {i}",
+                    ano = 2000 + i,
+                    modelo = $"modelo {i}",
+                    placa = $"placa {i}"
+                };
+                arquivo.WriteLine(JsonConvert.SerializeObject(veiculo) + ";");
+            }
+            arquivo.Close();
         }
         static void inserirNovoVeiculo()
         {
@@ -66,7 +86,7 @@ namespace Car_Storage
                     Console.WriteLine("Digite o modelo do carro");
                     veiculo.modelo = Console.ReadLine();
                     Console.WriteLine("Digite o ano de fabricação do carro");
-                    veiculo.ano = int.Parse(Console.ReadLine());
+                    veiculo.ano = validaAno();
                     Console.WriteLine("Digite a placa do carro");
                     veiculo.placa = Console.ReadLine();
                     Console.WriteLine(veiculo.marca);
@@ -76,9 +96,10 @@ namespace Car_Storage
                     arquivo.WriteLine(JsonConvert.SerializeObject(veiculo) + ";");
                     arquivo.Close();
                     FuncoesComuns.escrevePergunta("Informações guardadas com sucesso.", true);
-                    Menu();
                 }
-                else FuncoesArquivo.criaArquivo();
+                else
+                    FuncoesArquivo.criaArquivo();
+                Menu();
             }
             catch (Exception ex)
             {
@@ -110,6 +131,18 @@ namespace Car_Storage
                 }
             }
             else FuncoesArquivo.criaArquivo();
+        }
+        #endregion
+        #region Funções Validação Inserir novo carro
+        static int validaAno()
+        {
+            int ano = int.Parse(Console.ReadLine());
+            if (ano < 1500)
+            {
+                Console.WriteLine("Digite um ano de fabricação válido.");
+                ano = validaAno();
+            }
+            return ano;
         }
         #endregion
         #region Funções Switch Lista
@@ -160,13 +193,15 @@ namespace Car_Storage
         private static void imprimeCarros(IEnumerable<Carro> listaCarros)
         {
             if (listaCarros.Count<Carro>() == 0)
-                FuncoesComuns.escrevePergunta("O arquivo está vazio, insira dados.", true);            
+                FuncoesComuns.escrevePergunta("O arquivo está vazio, insira dados.", true);
             else
             {
+                var teste = new StringBuilder();
                 foreach (Carro carro in listaCarros)
                 {
-                    Console.WriteLine($"=> Marca:{carro.marca}; Modelo:{carro.modelo}; Ano:{carro.ano}; Placa:{carro.placa}.");
+                    teste.Append($"=> Marca:{carro.marca}; Modelo:{carro.modelo}; Ano:{carro.ano}; Placa:{carro.placa}.\n");
                 }
+                Console.WriteLine(teste.ToString());
                 FuncoesComuns.escrevePergunta("Arquivo aberto com sucesso.", true);
             }
             Menu();
