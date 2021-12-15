@@ -1,26 +1,25 @@
 using System;
-using System.Text;
 using Newtonsoft.Json;
-using System.Text.RegularExpressions;
 
 namespace Car_Storage
 {
     public class Console_Carros
     {
-        static List<Carro> carrosLista = new List<Carro>();
+        public static FuncoesComuns FComuns = new FuncoesComuns();
         static Carro veiculo = new Carro();
+        static FuncoesArquivo FArquivo = new FuncoesArquivo();
         static string path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + @$"\Carros.txt";
         public static void Menu()
         {
             try
             {
                 // Console.Clear();
-                criaLinha();
+                FComuns.criaLinha();
                 Console.WriteLine("Menu Principal");
-                criaLinha();
+                FComuns.criaLinha();
                 Console.WriteLine("[1] Inserir um novo veículo\n" +
                 "[2] Listar os veículos cadastrados");
-                criaLinha();
+                FComuns.criaLinha();
                 Console.Write("Digite a opção desejada: ");
                 escolha(Console.ReadLine());
             }
@@ -35,7 +34,7 @@ namespace Car_Storage
             try
             {
                 // Console.Clear();
-                criaLinha();
+                FComuns.criaLinha();
                 switch (escolha)
                 {
                     case "1":
@@ -63,7 +62,7 @@ namespace Car_Storage
                 {
                     // Console.Clear();
                     var arquivo = new StreamWriter(path, append: true);
-                    criaLinha();
+                    FComuns.criaLinha();
                     Console.WriteLine("Digite a marca do carro");
                     veiculo.marca = Console.ReadLine();
                     Console.WriteLine("Digite o modelo do carro");
@@ -78,10 +77,10 @@ namespace Car_Storage
                     Console.WriteLine(veiculo.placa);
                     arquivo.WriteLine(JsonConvert.SerializeObject(veiculo) + ";");
                     arquivo.Close();
-                    retornarMenu("Informações guardadas com sucesso.", true);
+                    FComuns.retornarMenu("Informações guardadas com sucesso.", true);
                     Menu();
                 }
-                else criaArquivo();
+                else FArquivo.criaArquivo();
             }
             catch (Exception ex)
             {
@@ -96,23 +95,23 @@ namespace Car_Storage
                 if (System.IO.File.ReadAllText(path) != "")
                 {
                     // Console.Clear();
-                    criaLinha();
+                    FComuns.criaLinha();
                     Console.WriteLine("Como deseja listar?");
-                    criaLinha();
+                    FComuns.criaLinha();
                     Console.WriteLine("[1] Listar os veículos filtrando pela ordem de cadastro\n" +
                         "[2] Listar os veículos filtrando pelo ano de fabricação\n" +
                         "[3] Listar os veículos filtrando pelo modelo");
-                    criaLinha();
+                    FComuns.criaLinha();
                     Console.Write("Digite a opção desejada: ");
                     escolhaListarVeiculos(Console.ReadLine());
                 }
                 else
                 {
-                    retornarMenu("O arquivo está vazio, insira dados.", true);
+                    FComuns.retornarMenu("O arquivo está vazio, insira dados.", true);
                     Menu();
                 }
             }
-            else criaArquivo();
+            else FArquivo.criaArquivo();
         }
         #endregion
         #region Funções Switch Lista
@@ -121,7 +120,7 @@ namespace Car_Storage
             try
             {
                 // Console.Clear();
-                criaLinha();
+                FComuns.criaLinha();
                 switch (escolha)
                 {
                     case "1":
@@ -147,112 +146,43 @@ namespace Car_Storage
         static void listaOrdemCadastro()
         {
             // Console.Clear();
-            insereValorListaCarros();
+            List<Carro> carrosLista = FArquivo.insereValorListaCarros();
             foreach (Carro elemento in carrosLista)
             {
                 Console.WriteLine($"=> Marca:{elemento.marca}; Modelo:{elemento.modelo}; Ano:{elemento.ano}; Placa:{elemento.placa}.");
             }
-            retornarMenu("Arquivo aberto com sucesso.", true);
+            carrosLista.Clear();
+            FComuns.retornarMenu("Arquivo aberto com sucesso.", true);
             Menu();
         }
         static void listaOrdemAno()
         {
-            insereValorListaCarros();
+            List<Carro> carrosLista = FArquivo.insereValorListaCarros();
             IEnumerable<Carro> sequencia = carrosLista.OrderBy(elemento => elemento.ano);
             foreach (Carro elemento in sequencia)
             {
                 Console.WriteLine($"=> Marca:{elemento.marca}; Modelo:{elemento.modelo}; Ano:{elemento.ano}; Placa:{elemento.placa}.");
             }
-            retornarMenu("Arquivo aberto com sucesso.", true);
+            carrosLista.Clear();
+            FComuns.retornarMenu("Arquivo aberto com sucesso.", true);
             Menu();
         }
         static void listaOrdemModelo()
         {
-            insereValorListaCarros();
+            List<Carro> carrosLista = FArquivo.insereValorListaCarros();
             IEnumerable<Carro> sequencia = carrosLista.OrderBy(elemento => elemento.modelo);
             foreach (Carro elemento in sequencia)
             {
                 Console.WriteLine($"=> Marca:{elemento.marca}; Modelo:{elemento.modelo}; Ano:{elemento.ano}; Placa:{elemento.placa}.");
             }
-            retornarMenu("Arquivo aberto com sucesso.", true);
+            carrosLista.Clear();
+            FComuns.retornarMenu("Arquivo aberto com sucesso.", true);
             Menu();
         }
         #endregion
-        #region Funções Comuns
-        public static bool retornarMenu(string msg = "", bool read = false)
-        {
-            criaLinha();
-            Console.WriteLine(msg + (read ? "\nPressione qualquer tecla para continuar." : string.Empty));
-            if (read)
-            {
-                Console.ReadKey();
-                carrosLista.Clear();
-                return false;
-            }
-            string? resposta = Console.ReadLine();
-            // Console.Clear();
-            if (!string.IsNullOrEmpty(resposta) &&
-            resposta.ToLower() == "s")
-                return true;
-            else
-                return false;
-        }
-        static void criaLinha(int repeticoes = 30, char simbolo = '=')
-        {
-            var store = new StringBuilder(repeticoes);
-            int index = 0;
-            while (index < repeticoes)
-            {
-                store.Append(simbolo);
-                index++;
-            }
-            Console.WriteLine(store.ToString());
-        }
-        static void criaArquivo()
-        {
-            Console.WriteLine("O arquivo com a lista de carros não existe.\nDeseja criar um novo? <s/n>");
-            if (Console.ReadLine() == "s")
-            {
-                criaLinha();
-                var arquivo = new StreamWriter(path, true);
-                arquivo.Close();
-                Console.WriteLine("Arquivo criado com sucesso.\nPressione qualquer tecla para continuar.");
-                Console.ReadKey();
-                Menu();
-            }
-            else Menu();
-        }
-        #endregion
+
         #region Funções Arquivo
-        static void insereValorListaCarros()
-        {
-            string arquivo = System.IO.File.ReadAllText(path);
-            if (arquivo.Contains(";"))
-            {
-                string[] blocos = arquivo.Split(";");
-                for (int i = 0; i < blocos.Length; i++)
-                {
-                    if (!string.IsNullOrEmpty(blocos[i]))
-                    {
-                        try
-                        {
-                            var itemConvertido = JsonConvert.DeserializeObject<Carro>(blocos[i]);
-                            if (itemConvertido != null)
-                                carrosLista.Add(itemConvertido);
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine($"Função insereValorListaCarros, erro :{ex.Message}");
-                            throw new Exception(ex.Message);
-                        }
-                    }
-                }
-            }
-            else
-            {
-                carrosLista.Add(JsonConvert.DeserializeObject<Carro>(arquivo));
-            }
-        }
+
         #endregion
     }
 }
