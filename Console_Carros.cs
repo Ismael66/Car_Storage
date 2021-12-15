@@ -88,7 +88,7 @@ namespace Car_Storage
                     Console.WriteLine("Digite o ano de fabricação do carro");
                     veiculo.ano = validaAno();
                     Console.WriteLine("Digite a placa do carro");
-                    veiculo.placa = Console.ReadLine();
+                    veiculo.placa = validaPlaca();
                     Console.WriteLine(veiculo.marca);
                     Console.WriteLine(veiculo.modelo);
                     Console.WriteLine(veiculo.ano);
@@ -137,12 +137,41 @@ namespace Car_Storage
         static int validaAno()
         {
             int ano = int.Parse(Console.ReadLine());
-            if (ano < 1500)
+            int anoAtual = int.Parse(DateTime.Now.ToString("yyyy"));
+            Console.WriteLine(anoAtual);
+            if (ano < 1500 || ano > anoAtual)
             {
-                Console.WriteLine("Digite um ano de fabricação válido.");
+                Console.WriteLine("Digite um ano de fabricação válido.\nApenas datas maiores que 1500 e menores que a data atual.");
                 ano = validaAno();
             }
             return ano;
+        }
+        static string validaPlaca()
+        {
+            string placa = Console.ReadLine();
+            if (placa.Length != 7)
+            {
+                Console.WriteLine("Digite uma placa válida.\nNela deve conter um total de 7 caracteres, incluindo 3 letras e 4 numeros.");
+                placa = validaPlaca();
+            }
+            else
+            {
+                int quantLetras = 0;
+                int quantNumeros = 0;
+                for (int i = 0; i < placa.Length; i++)
+                {
+                    if (Char.IsNumber(placa[i]))
+                        quantNumeros++;
+                    else if (Char.IsLetter(placa[i]))
+                        quantLetras++;
+                }
+                if (quantLetras != 3 && quantNumeros != 4)
+                {
+                    Console.WriteLine("Digite uma placa válida.\nNela deve conter um total de 7 caracteres, incluindo 3 letras e 4 numeros.");
+                    placa = validaPlaca();
+                }
+            }
+            return placa;
         }
         #endregion
         #region Funções Switch Lista
