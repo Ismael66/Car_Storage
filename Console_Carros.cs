@@ -5,21 +5,18 @@ namespace Car_Storage
 {
     public class Console_Carros
     {
-        public static FuncoesComuns FComuns = new FuncoesComuns();
-        static Carro veiculo = new Carro();
-        static FuncoesArquivo FArquivo = new FuncoesArquivo();
         static string path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + @$"\Carros.txt";
         public static void Menu()
         {
             try
             {
                 // Console.Clear();
-                FComuns.criaLinha();
+                FuncoesComuns.criaLinha();
                 Console.WriteLine("Menu Principal");
-                FComuns.criaLinha();
+                FuncoesComuns.criaLinha();
                 Console.WriteLine("[1] Inserir um novo veículo\n" +
                 "[2] Listar os veículos cadastrados");
-                FComuns.criaLinha();
+                FuncoesComuns.criaLinha();
                 Console.Write("Digite a opção desejada: ");
                 escolha(Console.ReadLine());
             }
@@ -34,7 +31,7 @@ namespace Car_Storage
             try
             {
                 // Console.Clear();
-                FComuns.criaLinha();
+                FuncoesComuns.criaLinha();
                 switch (escolha)
                 {
                     case "1":
@@ -61,8 +58,9 @@ namespace Car_Storage
                 if (File.Exists(path))
                 {
                     // Console.Clear();
+                    var veiculo = new Carro();
                     var arquivo = new StreamWriter(path, append: true);
-                    FComuns.criaLinha();
+                    FuncoesComuns.criaLinha();
                     Console.WriteLine("Digite a marca do carro");
                     veiculo.marca = Console.ReadLine();
                     Console.WriteLine("Digite o modelo do carro");
@@ -77,10 +75,10 @@ namespace Car_Storage
                     Console.WriteLine(veiculo.placa);
                     arquivo.WriteLine(JsonConvert.SerializeObject(veiculo) + ";");
                     arquivo.Close();
-                    FComuns.retornarMenu("Informações guardadas com sucesso.", true);
+                    FuncoesComuns.escrevePergunta("Informações guardadas com sucesso.", true);
                     Menu();
                 }
-                else FArquivo.criaArquivo();
+                else FuncoesArquivo.criaArquivo();
             }
             catch (Exception ex)
             {
@@ -95,23 +93,23 @@ namespace Car_Storage
                 if (System.IO.File.ReadAllText(path) != "")
                 {
                     // Console.Clear();
-                    FComuns.criaLinha();
+                    FuncoesComuns.criaLinha();
                     Console.WriteLine("Como deseja listar?");
-                    FComuns.criaLinha();
+                    FuncoesComuns.criaLinha();
                     Console.WriteLine("[1] Listar os veículos filtrando pela ordem de cadastro\n" +
                         "[2] Listar os veículos filtrando pelo ano de fabricação\n" +
                         "[3] Listar os veículos filtrando pelo modelo");
-                    FComuns.criaLinha();
+                    FuncoesComuns.criaLinha();
                     Console.Write("Digite a opção desejada: ");
                     escolhaListarVeiculos(Console.ReadLine());
                 }
                 else
                 {
-                    FComuns.retornarMenu("O arquivo está vazio, insira dados.", true);
+                    FuncoesComuns.escrevePergunta("O arquivo está vazio, insira dados.", true);
                     Menu();
                 }
             }
-            else FArquivo.criaArquivo();
+            else FuncoesArquivo.criaArquivo();
         }
         #endregion
         #region Funções Switch Lista
@@ -120,7 +118,7 @@ namespace Car_Storage
             try
             {
                 // Console.Clear();
-                FComuns.criaLinha();
+                FuncoesComuns.criaLinha();
                 switch (escolha)
                 {
                     case "1":
@@ -146,43 +144,33 @@ namespace Car_Storage
         static void listaOrdemCadastro()
         {
             // Console.Clear();
-            List<Carro> carrosLista = FArquivo.insereValorListaCarros();
-            foreach (Carro elemento in carrosLista)
-            {
-                Console.WriteLine($"=> Marca:{elemento.marca}; Modelo:{elemento.modelo}; Ano:{elemento.ano}; Placa:{elemento.placa}.");
-            }
-            carrosLista.Clear();
-            FComuns.retornarMenu("Arquivo aberto com sucesso.", true);
-            Menu();
+            List<Carro> carrosLista = FuncoesArquivo.insereValorListaCarros();
+            imprimeCarros(carrosLista);
         }
         static void listaOrdemAno()
         {
-            List<Carro> carrosLista = FArquivo.insereValorListaCarros();
-            IEnumerable<Carro> sequencia = carrosLista.OrderBy(elemento => elemento.ano);
-            foreach (Carro elemento in sequencia)
-            {
-                Console.WriteLine($"=> Marca:{elemento.marca}; Modelo:{elemento.modelo}; Ano:{elemento.ano}; Placa:{elemento.placa}.");
-            }
-            carrosLista.Clear();
-            FComuns.retornarMenu("Arquivo aberto com sucesso.", true);
-            Menu();
+            List<Carro> carrosLista = FuncoesArquivo.insereValorListaCarros();
+            imprimeCarros(carrosLista.OrderBy(elemento => elemento.ano));
         }
         static void listaOrdemModelo()
         {
-            List<Carro> carrosLista = FArquivo.insereValorListaCarros();
-            IEnumerable<Carro> sequencia = carrosLista.OrderBy(elemento => elemento.modelo);
-            foreach (Carro elemento in sequencia)
+            List<Carro> carrosLista = FuncoesArquivo.insereValorListaCarros();
+            imprimeCarros(carrosLista.OrderBy(elemento => elemento.modelo));
+        }
+        private static void imprimeCarros(IEnumerable<Carro> listaCarros)
+        {
+            if (listaCarros.Count<Carro>() == 0)
+                FuncoesComuns.escrevePergunta("O arquivo está vazio, insira dados.", true);            
+            else
             {
-                Console.WriteLine($"=> Marca:{elemento.marca}; Modelo:{elemento.modelo}; Ano:{elemento.ano}; Placa:{elemento.placa}.");
+                foreach (Carro carro in listaCarros)
+                {
+                    Console.WriteLine($"=> Marca:{carro.marca}; Modelo:{carro.modelo}; Ano:{carro.ano}; Placa:{carro.placa}.");
+                }
+                FuncoesComuns.escrevePergunta("Arquivo aberto com sucesso.", true);
             }
-            carrosLista.Clear();
-            FComuns.retornarMenu("Arquivo aberto com sucesso.", true);
             Menu();
         }
-        #endregion
-
-        #region Funções Arquivo
-
         #endregion
     }
 }

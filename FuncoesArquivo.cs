@@ -4,28 +4,22 @@ using Newtonsoft.Json;
 namespace Car_Storage
 {
     public class FuncoesArquivo
-    {
-        public static List<Carro> carrosLista = new List<Carro>();
-        static Console_Carros menu = new Console_Carros();
-        public static FuncoesComuns FComuns = new FuncoesComuns();
+    {       
         static string path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + @$"\Carros.txt";
-
-        public void criaArquivo()
+        public static void criaArquivo()
         {
             Console.WriteLine("O arquivo com a lista de carros não existe.\nDeseja criar um novo? <s/n>");
             if (Console.ReadLine() == "s")
             {
-                FComuns.criaLinha();
+                FuncoesComuns.criaLinha();
                 var arquivo = new StreamWriter(path, true);
                 arquivo.Close();
-                Console.WriteLine("Arquivo criado com sucesso.\nPressione qualquer tecla para continuar.");
-                Console.ReadKey();
-                return;
+                FuncoesComuns.escrevePergunta("Arquivo criado com sucesso", true);
             }
-            else return;
         }
-        public List<Carro> insereValorListaCarros()
+        public static List<Carro> insereValorListaCarros()
         {
+            var carrosLista = new List<Carro>();
             string arquivo = System.IO.File.ReadAllText(path);
             if (arquivo.Contains(";"))
             {
@@ -47,10 +41,6 @@ namespace Car_Storage
                         }
                     }
                 }
-            }
-            else
-            {
-                carrosLista.Add(JsonConvert.DeserializeObject<Carro>(arquivo));
             }
             return carrosLista;
         }

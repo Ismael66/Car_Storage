@@ -2,9 +2,9 @@ using System;
 using System.Text;
 namespace Car_Storage
 {
-    public class FuncoesComuns
+    public static class FuncoesComuns
     {
-        public bool retornarMenu(string msg = "", bool read = false)
+        public static bool escrevePergunta(string msg = "", bool read = false)
         {
             criaLinha();
             Console.WriteLine(msg + (read ? "\nPressione qualquer tecla para continuar." : string.Empty));
@@ -21,7 +21,7 @@ namespace Car_Storage
             else
                 return false;
         }
-        public void criaLinha(int repeticoes = 30, char simbolo = '=')
+        public static void criaLinha(int repeticoes = 30, char simbolo = '=')
         {
             var store = new StringBuilder(repeticoes);
             int index = 0;
