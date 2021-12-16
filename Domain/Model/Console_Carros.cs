@@ -136,13 +136,14 @@ namespace Car_Storage
         #region Funções Validação Inserir novo carro
         static int validaAno()
         {
-            int ano = int.Parse(Console.ReadLine());
-            int anoAtual = int.Parse(DateTime.Now.ToString("yyyy"));
-            Console.WriteLine(anoAtual);
-            if (ano < 1500 || ano > anoAtual)
+            int ano;
+            while (true)
             {
+                int.TryParse(Console.ReadLine(), out ano);
+                int anoAtual = DateTime.Now.Year;
+                if (ano > 1500 && ano <= anoAtual)
+                    break;
                 Console.WriteLine("Digite um ano de fabricação válido.\nApenas datas maiores que 1500 e menores que a data atual.");
-                ano = validaAno();
             }
             return ano;
         }
