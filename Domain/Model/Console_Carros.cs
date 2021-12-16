@@ -148,28 +148,25 @@ namespace Car_Storage
         }
         static string validaPlaca()
         {
-            string placa = Console.ReadLine();
-            if (placa.Length != 7)
+            string placa;
+            while (true)
             {
+                placa = Console.ReadLine();
+                if (placa.Length == 7)
+                {
+                    int quantLetras = 0;
+                    int quantNumeros = 0;
+                    for (int i = 0; i < placa.Length; i++)
+                    {
+                        if (Char.IsNumber(placa[i]))
+                            quantNumeros++;
+                        else if (Char.IsLetter(placa[i]))
+                            quantLetras++;
+                    }
+                    if (quantLetras == 3 && quantNumeros == 4)
+                        break;
+                }
                 Console.WriteLine("Digite uma placa válida.\nNela deve conter um total de 7 caracteres, incluindo 3 letras e 4 numeros.");
-                placa = validaPlaca();
-            }
-            else
-            {
-                int quantLetras = 0;
-                int quantNumeros = 0;
-                for (int i = 0; i < placa.Length; i++)
-                {
-                    if (Char.IsNumber(placa[i]))
-                        quantNumeros++;
-                    else if (Char.IsLetter(placa[i]))
-                        quantLetras++;
-                }
-                if (quantLetras != 3 && quantNumeros != 4)
-                {
-                    Console.WriteLine("Digite uma placa válida.\nNela deve conter um total de 7 caracteres, incluindo 3 letras e 4 numeros.");
-                    placa = validaPlaca();
-                }
             }
             return placa;
         }
