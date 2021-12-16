@@ -16,7 +16,8 @@ namespace Car_Storage
                 Console.WriteLine("Menu Principal");
                 FuncoesComuns.criaLinha();
                 Console.WriteLine("[1] Inserir um novo veículo\n" +
-                "[2] Listar os veículos cadastrados");
+                "[2] Listar os veículos cadastrados\n" +
+                "[3] Sair do programa");
                 FuncoesComuns.criaLinha();
                 Console.Write("Digite a opção desejada: ");
                 escolha(Console.ReadLine());
@@ -41,6 +42,8 @@ namespace Car_Storage
                     case "2":
                         listarVeiculos();
                         break;
+                    case "3":
+                        return;
                     case "testeMassa":
                         inserirMassaDados();
                         break;
