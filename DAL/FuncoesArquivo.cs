@@ -76,7 +76,8 @@ namespace Car_Storage
                     apagarLinha(linha);
                     break;
                 case "2":
-                    //listaOrdemAno();
+                    abrirArquivo();
+                    Environment.Exit(0);
                     break;
                 case "3":
                     break;
@@ -92,6 +93,13 @@ namespace Car_Storage
             File.WriteAllLines(path, linhasArquivo);
             FuncoesComuns.escrevePergunta("Arquivo alterado com sucesso.", true);
             Console_Carros.listarVeiculos();
+        }
+        static void abrirArquivo()
+        {
+            ProcessStartInfo startInfo = new ProcessStartInfo("carros.txt");
+            startInfo.FileName = path;
+            startInfo.UseShellExecute = true;
+            Process.Start(startInfo);
         }
     }
 }
