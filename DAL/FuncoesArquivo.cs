@@ -45,7 +45,6 @@ namespace Car_Storage
                             Console.WriteLine($"Linha {i} = {linhasArquivo[i - 1]}");
                             FuncoesComuns.criaLinha();
                             removeTextoIndesejadoArquivo(i);
-                            return carrosLista;
                         }
                     }
                 }
@@ -54,18 +53,14 @@ namespace Car_Storage
         }
         static void removeTextoIndesejadoArquivo(int linha)
         {
-            while (true)
-            {
-                Console.WriteLine("O que deseja fazer?");
-                FuncoesComuns.criaLinha();
-                Console.WriteLine("[1] Programa apaga linha\n" +
-                    "[2] Usuário apaga caracteres indesejados manualmente\n" +
-                    "[3] Retornar");
-                FuncoesComuns.criaLinha();
-                Console.Write("Digite a opção desejada: ");
-                if (escolhaErroArquivo(linha) == "3")
-                    break;
-            }
+            Console.WriteLine("O que deseja fazer?");
+            FuncoesComuns.criaLinha();
+            Console.WriteLine("[1] Programa apaga linha\n" +
+                "[2] Usuário apaga caracteres indesejados manualmente\n" +
+                "[3] Retornar");
+            FuncoesComuns.criaLinha();
+            Console.Write("Digite a opção desejada: ");
+            escolhaErroArquivo(linha);
         }
         static string escolhaErroArquivo(int linha)
         {
@@ -80,6 +75,7 @@ namespace Car_Storage
                     Environment.Exit(0);
                     break;
                 case "3":
+                    Console_Carros.listarVeiculos();
                     break;
                 default:
                     break;

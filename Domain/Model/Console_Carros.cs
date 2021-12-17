@@ -128,7 +128,7 @@ namespace Car_Storage
                         Console.WriteLine("[1] Listar os veículos filtrando pela ordem de cadastro\n" +
                             "[2] Listar os veículos filtrando pelo ano de fabricação\n" +
                             "[3] Listar os veículos filtrando pelo modelo\n" +
-                            "[4] Retornar ao menu principal.");
+                            "[4] Retornar");
                         FuncoesComuns.criaLinha();    
                         Console.Write("Digite a opção desejada: ");
                         if (escolhaListarVeiculos() == "4")
