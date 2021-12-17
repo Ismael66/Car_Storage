@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 namespace Car_Storage
 {
     public class FuncoesArquivo
-    {       
+    {
         static string path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + @$"\Carros.txt";
         public static void criaArquivo()
         {
@@ -36,6 +36,7 @@ namespace Car_Storage
                         }
                         catch (Exception ex)
                         {
+                            // removeTextoIndesejadoArquivo();
                             Console.WriteLine($"Função insereValorListaCarros, erro :{ex.Message}");
                             throw new Exception(ex.Message);
                         }
@@ -44,5 +45,9 @@ namespace Car_Storage
             }
             return carrosLista;
         }
+        // public static void removeTextoIndesejadoArquivo()
+        // {
+        //     Console.WriteLine("entrou");
+        // }
     }
 }

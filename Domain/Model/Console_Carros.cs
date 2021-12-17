@@ -12,15 +12,19 @@ namespace Car_Storage
             try
             {
                 // Console.Clear();
-                FuncoesComuns.criaLinha();
-                Console.WriteLine("Menu Principal");
-                FuncoesComuns.criaLinha();
-                Console.WriteLine("[1] Inserir um novo veículo\n" +
-                "[2] Listar os veículos cadastrados\n" +
-                "[3] Sair do programa");
-                FuncoesComuns.criaLinha();
-                Console.Write("Digite a opção desejada: ");
-                escolha(Console.ReadLine());
+                while (true)
+                {
+                    FuncoesComuns.criaLinha();
+                    Console.WriteLine("Menu Principal");
+                    FuncoesComuns.criaLinha();
+                    Console.WriteLine("[1] Inserir um novo veículo\n" +
+                    "[2] Listar os veículos cadastrados\n" +
+                    "[3] Sair do programa");
+                    FuncoesComuns.criaLinha();
+                    Console.Write("Digite a opção desejada: ");
+                    if (escolha() == "3")
+                        break;
+                }
             }
             catch (Exception ex)
             {
@@ -28,12 +32,12 @@ namespace Car_Storage
             }
         }
         #region Funções Switch Principal
-        static void escolha(string? escolha)
+        static string? escolha()
         {
+            string? escolha = Console.ReadLine();
             try
             {
                 // Console.Clear();
-                FuncoesComuns.criaLinha();
                 switch (escolha)
                 {
                     case "1":
@@ -43,14 +47,14 @@ namespace Car_Storage
                         listarVeiculos();
                         break;
                     case "3":
-                        return;
+                        break;
                     case "testeMassa":
                         inserirMassaDados();
                         break;
                     default:
-                        Menu();
                         break;
                 }
+                return escolha;
             }
             catch (Exception ex)
             {
@@ -102,7 +106,6 @@ namespace Car_Storage
                 }
                 else
                     FuncoesArquivo.criaArquivo();
-                Menu();
             }
             catch (Exception ex)
             {
@@ -117,20 +120,23 @@ namespace Car_Storage
                 if (System.IO.File.ReadAllText(path) != "")
                 {
                     // Console.Clear();
-                    FuncoesComuns.criaLinha();
-                    Console.WriteLine("Como deseja listar?");
-                    FuncoesComuns.criaLinha();
-                    Console.WriteLine("[1] Listar os veículos filtrando pela ordem de cadastro\n" +
-                        "[2] Listar os veículos filtrando pelo ano de fabricação\n" +
-                        "[3] Listar os veículos filtrando pelo modelo");
-                    FuncoesComuns.criaLinha();
-                    Console.Write("Digite a opção desejada: ");
-                    escolhaListarVeiculos(Console.ReadLine());
+                    while (true)
+                    {
+                        FuncoesComuns.criaLinha();
+                        Console.WriteLine("Como deseja listar?");
+                        FuncoesComuns.criaLinha();
+                        Console.WriteLine("[1] Listar os veículos filtrando pela ordem de cadastro\n" +
+                            "[2] Listar os veículos filtrando pelo ano de fabricação\n" +
+                            "[3] Listar os veículos filtrando pelo modelo\n" +
+                            "[4] Retornar ao menu principal.");
+                        Console.Write("Digite a opção desejada: ");
+                        if (escolhaListarVeiculos() == "4")
+                            break;
+                    }
                 }
                 else
                 {
                     FuncoesComuns.escrevePergunta("O arquivo está vazio, insira dados.", true);
-                    Menu();
                 }
             }
             else FuncoesArquivo.criaArquivo();
@@ -152,7 +158,7 @@ namespace Car_Storage
         }
         static string validaPlaca()
         {
-            string placa;
+            string? placa;
             while (true)
             {
                 placa = Console.ReadLine();
@@ -176,12 +182,13 @@ namespace Car_Storage
         }
         #endregion
         #region Funções Switch Lista
-        static void escolhaListarVeiculos(string? escolha)
+        static string? escolhaListarVeiculos()
         {
             try
             {
                 // Console.Clear();
                 FuncoesComuns.criaLinha();
+                string? escolha = Console.ReadLine();
                 switch (escolha)
                 {
                     case "1":
@@ -193,11 +200,12 @@ namespace Car_Storage
                     case "3":
                         listaOrdemModelo();
                         break;
+                    case "4":
+                        break;
                     default:
-                        Console.WriteLine("default");
-                        Menu();
                         break;
                 }
+                return escolha;
             }
             catch (Exception ex)
             {
@@ -222,7 +230,7 @@ namespace Car_Storage
         }
         private static void imprimeCarros(IEnumerable<Carro> listaCarros)
         {
-            if (listaCarros.Count<Carro>() == 0)
+            if (listaCarros.Count() == 0)
                 FuncoesComuns.escrevePergunta("O arquivo está vazio, insira dados.", true);
             else
             {
@@ -234,7 +242,6 @@ namespace Car_Storage
                 Console.WriteLine(teste.ToString());
                 FuncoesComuns.escrevePergunta("Arquivo aberto com sucesso.", true);
             }
-            Menu();
         }
         #endregion
     }
