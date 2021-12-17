@@ -11,7 +11,7 @@ namespace Car_Storage
         {
             try
             {
-                // Console.Clear();
+                Console.Clear();
                 while (true)
                 {
                     FuncoesComuns.criaLinha();
@@ -37,7 +37,7 @@ namespace Car_Storage
             string? escolha = Console.ReadLine();
             try
             {
-                // Console.Clear();
+                Console.Clear();
                 switch (escolha)
                 {
                     case "1":
@@ -84,7 +84,7 @@ namespace Car_Storage
             {
                 if (File.Exists(path))
                 {
-                    // Console.Clear();
+                    Console.Clear();
                     var veiculo = new Carro();
                     var arquivo = new StreamWriter(path, append: true);
                     FuncoesComuns.criaLinha();
@@ -113,7 +113,7 @@ namespace Car_Storage
                 throw new Exception(ex.Message);
             }
         }
-        static void listarVeiculos()
+        public static void listarVeiculos()
         {
             if (File.Exists(path))
             {
@@ -129,6 +129,7 @@ namespace Car_Storage
                             "[2] Listar os veículos filtrando pelo ano de fabricação\n" +
                             "[3] Listar os veículos filtrando pelo modelo\n" +
                             "[4] Retornar ao menu principal.");
+                        FuncoesComuns.criaLinha();    
                         Console.Write("Digite a opção desejada: ");
                         if (escolhaListarVeiculos() == "4")
                             break;
@@ -187,7 +188,6 @@ namespace Car_Storage
             try
             {
                 // Console.Clear();
-                FuncoesComuns.criaLinha();
                 string? escolha = Console.ReadLine();
                 switch (escolha)
                 {
@@ -214,7 +214,6 @@ namespace Car_Storage
         }
         static void listaOrdemCadastro()
         {
-            // Console.Clear();
             List<Carro> carrosLista = FuncoesArquivo.insereValorListaCarros();
             imprimeCarros(carrosLista);
         }
@@ -234,6 +233,7 @@ namespace Car_Storage
                 FuncoesComuns.escrevePergunta("O arquivo está vazio, insira dados.", true);
             else
             {
+                FuncoesComuns.criaLinha();
                 var teste = new StringBuilder();
                 foreach (Carro carro in listaCarros)
                 {

@@ -11,10 +11,11 @@ namespace Car_Storage
             if (read)
             {
                 Console.ReadKey();
+                Console.Clear();
                 return false;
             }
             string? resposta = Console.ReadLine();
-            // Console.Clear();
+            Console.Clear();
             if (!string.IsNullOrEmpty(resposta) &&
             resposta.ToLower() == "s")
                 return true;

@@ -1,10 +1,12 @@
 using System;
+using System.Diagnostics;
 using Newtonsoft.Json;
 
 namespace Car_Storage
 {
     public class FuncoesArquivo
     {
+        static string[] blocos;
         static string path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + @$"\Carros.txt";
         public static void criaArquivo()
         {
@@ -23,7 +25,7 @@ namespace Car_Storage
             string arquivo = System.IO.File.ReadAllText(path);
             if (arquivo.Contains(";"))
             {
-                string[] blocos = arquivo.Split(";");
+                blocos = arquivo.Split(";");
                 for (int i = 0; i < blocos.Length; i++)
                 {
                     if (!string.IsNullOrEmpty(blocos[i]))
@@ -36,18 +38,60 @@ namespace Car_Storage
                         }
                         catch (Exception ex)
                         {
-                            // removeTextoIndesejadoArquivo();
-                            Console.WriteLine($"Função insereValorListaCarros, erro :{ex.Message}");
-                            throw new Exception(ex.Message);
+                            Console.Clear();
+                            string[] linhasArquivo = System.IO.File.ReadAllLines(path);
+                            FuncoesComuns.criaLinha();
+                            Console.WriteLine($"A linha {i} está com um ou mais caracteres indesejados.");
+                            Console.WriteLine($"Linha {i} = {linhasArquivo[i - 1]}");
+                            FuncoesComuns.criaLinha();
+                            removeTextoIndesejadoArquivo(i);
+                            return carrosLista;
                         }
                     }
                 }
             }
             return carrosLista;
         }
-        // public static void removeTextoIndesejadoArquivo()
-        // {
-        //     Console.WriteLine("entrou");
-        // }
+        static void removeTextoIndesejadoArquivo(int linha)
+        {
+            while (true)
+            {
+                Console.WriteLine("O que deseja fazer?");
+                FuncoesComuns.criaLinha();
+                Console.WriteLine("[1] Programa apaga linha\n" +
+                    "[2] Usuário apaga caracteres indesejados manualmente\n" +
+                    "[3] Retornar");
+                FuncoesComuns.criaLinha();
+                Console.Write("Digite a opção desejada: ");
+                if (escolhaErroArquivo(linha) == "3")
+                    break;
+            }
+        }
+        static string escolhaErroArquivo(int linha)
+        {
+            string? escolha = Console.ReadLine();
+            switch (escolha)
+            {
+                case "1":
+                    apagarLinha(linha);
+                    break;
+                case "2":
+                    //listaOrdemAno();
+                    break;
+                case "3":
+                    break;
+                default:
+                    break;
+            }
+            return escolha;
+        }
+        static void apagarLinha(int linha)
+        {
+            string[] linhasArquivo = System.IO.File.ReadAllLines(path);
+            linhasArquivo[linha - 1] = "";
+            File.WriteAllLines(path, linhasArquivo);
+            FuncoesComuns.escrevePergunta("Arquivo alterado com sucesso.", true);
+            Console_Carros.listarVeiculos();
+        }
     }
 }
