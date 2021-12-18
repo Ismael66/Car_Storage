@@ -6,7 +6,7 @@ namespace Car_Storage
 {
     public class FuncoesArquivo
     {
-        static string[] blocos;
+        static string[]? blocos;
         static string path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + @$"\Carros.txt";
         public static void criaArquivo()
         {
@@ -36,7 +36,7 @@ namespace Car_Storage
                             if (itemConvertido != null)
                                 carrosLista.Add(itemConvertido);
                         }
-                        catch (Exception ex)
+                        catch (Exception)
                         {
                             Console.Clear();
                             string[] linhasArquivo = System.IO.File.ReadAllLines(path);
@@ -44,45 +44,15 @@ namespace Car_Storage
                             Console.WriteLine($"A linha {i} está com um ou mais caracteres indesejados.");
                             Console.WriteLine($"Linha {i} = {linhasArquivo[i - 1]}");
                             FuncoesComuns.criaLinha();
-                            removeTextoIndesejadoArquivo(i);
+                            Console_Carros.menuArquivo();
+                            Console_Carros.escolhaErroArquivo(i);
                         }
                     }
                 }
             }
             return carrosLista;
         }
-        static void removeTextoIndesejadoArquivo(int linha)
-        {
-            Console.WriteLine("O que deseja fazer?");
-            FuncoesComuns.criaLinha();
-            Console.WriteLine("[1] Programa apaga linha\n" +
-                "[2] Usuário apaga caracteres indesejados manualmente\n" +
-                "[3] Retornar");
-            FuncoesComuns.criaLinha();
-            Console.Write("Digite a opção desejada: ");
-            escolhaErroArquivo(linha);
-        }
-        static string escolhaErroArquivo(int linha)
-        {
-            string? escolha = Console.ReadLine();
-            switch (escolha)
-            {
-                case "1":
-                    apagarLinha(linha);
-                    break;
-                case "2":
-                    abrirArquivo();
-                    Environment.Exit(0);
-                    break;
-                case "3":
-                    Console_Carros.listarVeiculos();
-                    break;
-                default:
-                    break;
-            }
-            return escolha;
-        }
-        static void apagarLinha(int linha)
+        public static void apagarLinha(int linha)
         {
             string[] linhasArquivo = System.IO.File.ReadAllLines(path);
             linhasArquivo[linha - 1] = "";
@@ -90,7 +60,7 @@ namespace Car_Storage
             FuncoesComuns.escrevePergunta("Arquivo alterado com sucesso.", true);
             Console_Carros.listarVeiculos();
         }
-        static void abrirArquivo()
+        public static void abrirArquivo()
         {
             ProcessStartInfo startInfo = new ProcessStartInfo("carros.txt");
             startInfo.FileName = path;

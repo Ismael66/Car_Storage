@@ -119,7 +119,6 @@ namespace Car_Storage
             {
                 if (System.IO.File.ReadAllText(path) != "")
                 {
-                    // Console.Clear();
                     while (true)
                     {
                         FuncoesComuns.criaLinha();
@@ -129,7 +128,7 @@ namespace Car_Storage
                             "[2] Listar os veículos filtrando pelo ano de fabricação\n" +
                             "[3] Listar os veículos filtrando pelo modelo\n" +
                             "[4] Retornar");
-                        FuncoesComuns.criaLinha();    
+                        FuncoesComuns.criaLinha();
                         Console.Write("Digite a opção desejada: ");
                         if (escolhaListarVeiculos() == "4")
                             break;
@@ -163,7 +162,7 @@ namespace Car_Storage
             while (true)
             {
                 placa = Console.ReadLine();
-                if (placa.Length == 7)
+                if (placa != null && placa.Length == 7)
                 {
                     int quantLetras = 0;
                     int quantNumeros = 0;
@@ -187,7 +186,6 @@ namespace Car_Storage
         {
             try
             {
-                // Console.Clear();
                 string? escolha = Console.ReadLine();
                 switch (escolha)
                 {
@@ -242,6 +240,38 @@ namespace Car_Storage
                 Console.WriteLine(teste.ToString());
                 FuncoesComuns.escrevePergunta("Arquivo aberto com sucesso.", true);
             }
+        }
+        #endregion
+        #region Funções Intermediárias Arquivo
+        public static string? escolhaErroArquivo(int linha)
+        {
+            string? escolha = Console.ReadLine();
+            switch (escolha)
+            {
+                case "1":
+                    FuncoesArquivo.apagarLinha(linha);
+                    break;
+                case "2":
+                    FuncoesArquivo.abrirArquivo();
+                    Environment.Exit(0);
+                    break;
+                case "3":
+                    listarVeiculos();
+                    break;
+                default:
+                    break;
+            }
+            return escolha;
+        }
+        public static void menuArquivo()
+        {
+            Console.WriteLine("O que deseja fazer?");
+            FuncoesComuns.criaLinha();
+            Console.WriteLine("[1] Programa apaga linha\n" +
+                "[2] Usuário apaga caracteres indesejados manualmente\n" +
+                "[3] Retornar");
+            FuncoesComuns.criaLinha();
+            Console.Write("Digite a opção desejada: ");
         }
         #endregion
     }
